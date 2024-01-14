@@ -23,3 +23,35 @@ export const createFile = async (req, res) => {
     res.status(500).json({ message: "Error creating file" });
   }
 };
+
+export const getFiles = async (req, res) => {
+  const files = await fs.readdir(folderPath);
+  if (files.length === 0) {
+    res.status(404).json({ message: "Not found files" });
+    return;
+  }
+  res.json(files);
+};
+
+export const getFileInfo = async (req, res) => {
+  const files = await fs.readdir(folderPath);
+  const { fileName } = req.params;
+  const searchFile = files.find(
+    (file) => file.toLowerCase() === fileName.toLowerCase()
+  );
+  if (!searchFile) {
+    res.status(404).json({ message: "Not found file" });
+    return;
+  }
+
+  const filePath = path.resolve("files", req.body.fileName);
+  const name = path.basename(filePath, extension);
+  const extension = path.extname(filePath);
+  const content = await fs.readFile(filePath, "utf8");
+
+  res.json({
+    name,
+    extension,
+    content,
+  });
+};

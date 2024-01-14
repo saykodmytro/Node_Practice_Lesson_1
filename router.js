@@ -1,16 +1,12 @@
 import express from "express";
 import validateBody from "./middlewares/validateBody.js";
-import { createFile } from "./controllers.js";
+import { createFile, getFiles, getFileInfo } from "./controllers.js";
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.send("Get");
-});
+router.get("/", getFiles);
 
-router.get("/:fileName", (req, res) => {
-  res.send("Get/fileName");
-});
+router.get("/:fileName", getFileInfo);
 
 router.post("/", validateBody, createFile);
 
